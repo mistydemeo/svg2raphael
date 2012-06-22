@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
 
 require 'svg2raphael/svg'
-require 'slop'
 
-opts = Slop.parse! do
+if !ARGV.first
+  STDERR.puts "You need to specify an SVG file to convert!"
+  exit Errno::EINVAL::Errno
 end
 
 svg = Raphael::SVG.new ARGV[0]
