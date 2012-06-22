@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require 'svg2raphael/svg'
+require 'slop'
+
+opts = Slop.parse! do
+end
+
+svg = Raphael::SVG.new ARGV[0]
+
+STDOUT.puts svg.to_js
