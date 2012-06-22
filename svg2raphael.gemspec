@@ -14,4 +14,6 @@ Gem::Specification.new do |gem|
   gem.name          = "svg2raphael"
   gem.require_paths = ["lib"]
   gem.version       = Raphael::VERSION
+
+  gem.add_runtime_dependency 'nokogiri'
 end
