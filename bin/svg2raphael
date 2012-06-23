@@ -9,4 +9,5 @@ end
 
 svg = Raphael::SVG.new ARGV[0]
 
-STDOUT.puts svg.to_js
+File.open(svg.filename+".js", "w") {|f| f.write svg.to_js}
+STDOUT.puts "Output written to #{svg.filename}.js"

@@ -4,6 +4,8 @@ require 'json'
 module Raphael
   class SVG
 
+    attr_accessor :filename
+
     def initialize svg
       @filename = File.basename(svg, File.extname(svg))
       svg_data = Nokogiri::XML(File.read(svg))
