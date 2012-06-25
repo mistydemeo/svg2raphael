@@ -7,7 +7,13 @@ if !ARGV.first
   exit Errno::EINVAL::Errno
 end
 
-svg = Raphael::SVG.new ARGV[0]
+ARGV.each do |file|
+  begin
+    svg = Raphael::SVG.new file
 
-File.open(svg.filename+".js", "w") {|f| f.write svg.to_js}
-STDOUT.puts "Output written to #{svg.filename}.js"
+    File.open(svg.filename+".js", "w") {|f| f.write svg.to_js}
+    STDOUT.puts "Processed #{file}"
+  rescue
+    STDERR.puts "#{file} failed"
+  end
+end
