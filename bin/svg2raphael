@@ -9,6 +9,7 @@ end
 
 if ['-h','-help','--help'].any? {|arg| ARGV[0] == arg}
   STDOUT.puts "Usage: svg2raphael <input> ..."
+  exit 0
 end
 
 ARGV.each do |file|
