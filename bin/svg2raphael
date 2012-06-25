@@ -7,6 +7,10 @@ if !ARGV.first
   exit Errno::EINVAL::Errno
 end
 
+if ['-h','-help','--help'].any? {|arg| ARGV[0] == arg}
+  STDOUT.puts "Usage: svg2raphael <input> ..."
+end
+
 ARGV.each do |file|
   begin
     svg = Raphael::SVG.new file
