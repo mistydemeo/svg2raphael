@@ -1,24 +1,55 @@
 #!/usr/bin/env ruby
 
 require 'svg2raphael/svg'
+require 'slop'
+require 'find'
+
+def process file, opts
+  begin
+    svg = Raphael::SVG.new file
+    newfile = "#{svg.filename.dirname}/#{svg.basename}.js"
+    if File.exists? newfile and !opts.force?
+      STDERR.puts "#{newfile} already exists"
+      return
+    end
+
+    File.open(newfile, "w") {|f| f.write svg.to_js}
+    STDOUT.puts "Processed #{file}"
+  rescue Exception => exception
+    if opts.debug?
+      STDERR.puts exception
+      STDERR.puts exception.backtrace
+    end
+    STDERR.puts "#{file} failed"
+  end
+end
+
+opts = Slop.parse! do
+  banner "svg2raphael [-r] <file/directory>"
+  on :d, :debug, "Display backtrace"
+  on :f, :force, "Overwrite existing files"
+  on :h, :help, "Display this message" do
+    puts help
+    exit 0
+  end
+  on :r, :recursive, "Process all files in specified directory"
+end
 
 if !ARGV.first
-  STDERR.puts "You need to specify an SVG file to convert!"
+  STDERR.puts "You need to specify an SVG file or directory to convert!"
   exit Errno::EINVAL::Errno
 end
 
-if ['-h','-help','--help'].any? {|arg| ARGV[0] == arg}
-  STDOUT.puts "Usage: svg2raphael <input> ..."
-  exit 0
-end
-
-ARGV.each do |file|
-  begin
-    svg = Raphael::SVG.new file
-
-    File.open(svg.filename+".js", "w") {|f| f.write svg.to_js}
-    STDOUT.puts "Processed #{file}"
-  rescue
-    STDERR.puts "#{file} failed"
+if opts.recursive?
+  if !File.directory? ARGV.first
+    STDERR.puts "The specified input is not a directory!"
+    exit Errno::EINVAL::Errno
   end
+
+  Find.find(ARGV.first) do |file|
+    next unless File.extname(file).downcase == ".svg"
+    process file, opts
+  end
+else
+  ARGV.each { |file| process file, opts }
 end

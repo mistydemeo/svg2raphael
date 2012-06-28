@@ -1,14 +1,16 @@
 require 'nokogiri'
+require 'pathname'
 require 'json'
 
 module Raphael
   class SVG
 
-    attr_accessor :filename
+    attr_accessor :filename, :basename
 
     def initialize svg
-      @filename = File.basename(svg, File.extname(svg))
-      svg_data = Nokogiri::XML(File.read(svg))
+      @filename = Pathname.new svg
+      @basename = @filename.basename @filename.extname
+      svg_data = Nokogiri::XML(@filename.read)
 
       shapes = {}
       svg_data.search('g/g').each do |elem|
@@ -21,7 +23,7 @@ module Raphael
 
     def to_js
       json = JSON.pretty_generate @shapes
-      "var #{@filename.downcase} = #{json}"
+      "var #{@basename.to_s.downcase} = #{json}"
     end
 
   end

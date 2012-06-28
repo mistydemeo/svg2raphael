@@ -16,4 +16,5 @@ Gem::Specification.new do |gem|
   gem.version       = Raphael::VERSION
 
   gem.add_runtime_dependency 'nokogiri'
+  gem.add_runtime_dependency 'slop'
 end
