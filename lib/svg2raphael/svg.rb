@@ -14,7 +14,7 @@ module Raphael
 
       shapes = {}
       svg_data.search('g/g').each do |elem|
-        shape = elem.search("path").collect {|path| path[:d].strip}.join
+        shape = elem.search("path").collect {|path| path[:d].strip.delete " "}.join
         shapes[elem[:id]] = shape
       end
 
