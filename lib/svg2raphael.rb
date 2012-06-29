@@ -1,5 +1,2 @@
 require "svg2raphael/version"
-
-module Raphael
-  # Your code goes here...
-end
+require "svg2raphael/svg"
